@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-canvas: #FFFDF5;
+  --color-ink: #000000;
+  --color-hot-red: #FF6B6B;
+  --color-vivid-yellow: #FFD93D;
+  --color-soft-violet: #C4B5FD;
+  --color-white: #FFFFFF;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Accessible high-contrast visible focus indicators */
+  :focus-visible {
+    outline: 3px solid #000000;
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  /* Neo-brutalist tactile interaction utilities */
+  .neo-press {
+    transition: transform 100ms ease, box-shadow 100ms ease;
+  }
+  
+  .neo-press:active:not(:disabled) {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #000000 !important;
+  }
+
+  .neo-card-lift {
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .neo-card-lift:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #000000;
+  }
+
+  /* Grid pattern texture for courtroom landing hero */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Halftone dot pattern */
+  .bg-dot-pattern {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.15) 1.5px, transparent 1.5px);
+    background-size: 16px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
