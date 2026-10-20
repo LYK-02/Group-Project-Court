@@ -3,11 +3,15 @@ import { env } from './env.js';
 
 const connectionString = env.NODE_ENV === 'test' ? env.TEST_DATABASE_URL : env.DATABASE_URL;
 
+const isNeon = connectionString && (connectionString.includes('neon.tech') || connectionString.includes('sslmode=require'));
+const ssl = isNeon ? { rejectUnauthorized: false } : undefined;
+
 let pool = new pg.Pool({
   connectionString,
+  ssl,
   max: 10,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 10000,
 });
 
 // Suppress unhandled error crashes on idle pool clients
@@ -51,6 +55,8 @@ export const db = {
       return {
         status: 'healthy',
         latencyMs: Date.now() - start,
+        isNeon: Boolean(isNeon),
+        neonBranch: env.NEON_BRANCH || null,
       };
     } catch (err) {
       return {
