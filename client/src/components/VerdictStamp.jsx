@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Theatrical courtroom verdict stamp motif with slight rotation and bold border.

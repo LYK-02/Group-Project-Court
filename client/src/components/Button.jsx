@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Reusable neo-brutalist tactile button with bold border and hard shadow.

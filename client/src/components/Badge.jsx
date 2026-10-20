@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Reusable neo-brutalist status/category badge with border and high-contrast text.

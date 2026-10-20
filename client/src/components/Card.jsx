@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Reusable neo-brutalist Card container with black border and hard drop shadow.

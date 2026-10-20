@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Gavel, ShieldAlert, Menu, X, Activity } from 'lucide-react';
+import { useState } from 'react';
+import { Gavel, Menu, X, Activity } from 'lucide-react';
 import { Badge } from './Badge.jsx';
 
 export function Navbar({ apiStatus = 'unknown' }) {

@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Reusable neo-brutalist form input/textarea with prominent label, border, and error state.
