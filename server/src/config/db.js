@@ -23,6 +23,10 @@ export const db = {
     const start = Date.now();
     try {
       const res = await pool.query(text, params);
+      const duration = Date.now() - start;
+      if (duration > 1000) {
+        console.warn('[db:query:slow]', { text, durationMs: duration });
+      }
       return res;
     } catch (err) {
       console.error('[db:query:error]', { text, error: err.message });

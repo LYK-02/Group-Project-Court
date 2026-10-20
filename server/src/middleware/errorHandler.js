@@ -4,7 +4,7 @@ import { AppError } from '../utils/errors.js';
 /**
  * 404 Catch-all handler for undefined routes
  */
-export function notFoundHandler(req, res, next) {
+export function notFoundHandler(req, res, _next) {
   res.status(404).json({
     error: {
       code: 'NOT_FOUND',
