@@ -13,6 +13,7 @@ import { Button } from './components/Button.jsx';
 import { Card } from './components/Card.jsx';
 import { Badge } from './components/Badge.jsx';
 import { VerdictStamp } from './components/VerdictStamp.jsx';
+import { ShortcutsModal } from './components/ShortcutsModal.jsx';
 import { AuthProvider, useAuth } from './features/auth/AuthContext.jsx';
 import { AuthModal } from './features/auth/AuthModal.jsx';
 import { TeamProvider, useTeam } from './features/teams/TeamContext.jsx';
@@ -34,6 +35,7 @@ function AppContent() {
   });
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState('login');
+  const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
 
   const [healthData, setHealthData] = useState(null);
   const [healthLoading, setHealthLoading] = useState(true);
@@ -43,6 +45,31 @@ function AppContent() {
     setAuthModalTab(tab);
     setAuthModalOpen(true);
   };
+
+  // Keyboard accelerators listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't intercept when user is typing in form controls
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      if (e.key === '?' || (e.key === '/' && e.shiftKey)) {
+        e.preventDefault();
+        setShortcutsModalOpen((prev) => !prev);
+      } else if (e.key === '1') {
+        setActiveView('courtroom');
+      } else if (e.key === '2') {
+        setActiveView('tasks');
+      } else if (e.key === '3') {
+        setActiveView('teams');
+      } else if (e.key === '4') {
+        setActiveView('audit');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Fetch API health
   const checkHealth = async () => {
@@ -69,6 +96,7 @@ function AppContent() {
         activeView={activeView}
         setActiveView={setActiveView}
         onOpenAuth={openAuth}
+        onOpenShortcuts={() => setShortcutsModalOpen(true)}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
@@ -395,6 +423,12 @@ function AppContent() {
         initialTab={authModalTab}
       />
 
+      {/* Keyboard Shortcuts Docket Modal */}
+      <ShortcutsModal
+        isOpen={shortcutsModalOpen}
+        onClose={() => setShortcutsModalOpen(false)}
+      />
+
       {/* Footer */}
       <footer className="border-t-4 border-ink bg-white mt-16 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -403,8 +437,17 @@ function AppContent() {
             <span className="font-black uppercase text-sm">Group Project Court</span>
             <span className="text-xs text-neutral-500">• Peer Accountability & Verdict Engine</span>
           </div>
-          <div className="text-xs text-neutral-600 font-bold uppercase tracking-wider">
-            Satirical & Playful Student Tribunal
+          <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-wider">
+            <button
+              type="button"
+              onClick={() => setShortcutsModalOpen(true)}
+              className="text-neutral-700 hover:text-ink underline decoration-2 cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Shortcuts</span>
+              <kbd className="bg-canvas border border-ink px-1.5 py-0.5 font-mono text-[10px]">?</kbd>
+            </button>
+            <span className="text-neutral-400">•</span>
+            <span className="text-neutral-600">Satirical & Playful Student Tribunal</span>
           </div>
         </div>
       </footer>
