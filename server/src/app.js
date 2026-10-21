@@ -6,7 +6,10 @@ import { env } from './config/env.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
 import { requestLogger } from './middleware/logger.js';
 import { notFoundHandler, errorHandler } from './middleware/errorHandler.js';
+import { sessionMiddleware } from './middleware/auth.js';
 import healthRouter from './routes/health.js';
+import authRouter from './routes/auth.js';
+import teamsRouter from './routes/teams.js';
 
 export function createApp() {
   const app = express();
@@ -59,8 +62,13 @@ export function createApp() {
     app.use('/api', limiter);
   }
 
-  // 7. Mount Versioned API Routes
+  // 7. Session Middleware
+  app.use(sessionMiddleware);
+
+  // 8. Mount Versioned API Routes
   app.use('/api/v1', healthRouter);
+  app.use('/api/v1', authRouter);
+  app.use('/api/v1', teamsRouter);
 
   // 8. 404 and Error Handling
   app.use(notFoundHandler);
