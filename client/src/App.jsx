@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import {
   Gavel,
   Scale,
-  FileText,
   AlertTriangle,
   CheckCircle2,
-  Users,
   ShieldCheck,
   RefreshCw,
   Lock,
@@ -14,7 +12,6 @@ import { Navbar } from './components/Navbar.jsx';
 import { Button } from './components/Button.jsx';
 import { Card } from './components/Card.jsx';
 import { Badge } from './components/Badge.jsx';
-import { FormField } from './components/FormField.jsx';
 import { VerdictStamp } from './components/VerdictStamp.jsx';
 import { AuthProvider, useAuth } from './features/auth/AuthContext.jsx';
 import { AuthModal } from './features/auth/AuthModal.jsx';
@@ -42,10 +39,6 @@ function AppContent() {
   const [healthLoading, setHealthLoading] = useState(true);
   const [healthError, setHealthError] = useState(null);
 
-  // Form interactive demo state
-  const [demoInput, setDemoInput] = useState('');
-  const [demoError, setDemoError] = useState('');
-
   const openAuth = (tab = 'login') => {
     setAuthModalTab(tab);
     setAuthModalOpen(true);
@@ -68,14 +61,6 @@ function AppContent() {
   useEffect(() => {
     checkHealth();
   }, []);
-
-  const handleTestValidate = () => {
-    if (!demoInput.trim()) {
-      setDemoError('This field cannot be empty in Court testimony.');
-    } else {
-      setDemoError('');
-    }
-  };
 
   return (
     <div className="min-h-screen bg-canvas text-ink flex flex-col">
@@ -342,154 +327,60 @@ function AppContent() {
               )}
             </section>
 
-            {/* Neo-Brutalist Component Gallery */}
-            <section id="case-file-mode" aria-labelledby="case-file-title" className="space-y-6">
-            <div className="border-b-3 border-ink pb-2">
-              <h2 id="case-file-title" className="text-2xl sm:text-3xl font-black uppercase">
-                Case-File Mode — Clean Data Layout
-              </h2>
-              <p className="text-sm text-neutral-700">
-                High-contrast table layout for evidence review and team task distribution.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Task Board Preview */}
-              <Card shadow="normal" className="p-6 space-y-4">
-                <div className="flex items-center justify-between border-b-2 border-ink pb-3">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-ink" />
-                    <h3 className="font-black uppercase text-lg">Active Sprint Tasks</h3>
-                  </div>
-                  <Badge variant="violet" size="sm">
-                    {activeTeam ? `Team: ${activeTeam.name}` : 'Team: CS 401'}
-                  </Badge>
+            {/* Jurisdictional Workflow Overview */}
+            <section aria-labelledby="workflow-title" className="space-y-6">
+              <div className="border-b-3 border-ink pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h2 id="workflow-title" className="text-2xl sm:text-3xl font-black uppercase text-ink">
+                    Jurisdictional Protocol
+                  </h2>
+                  <p className="text-sm text-neutral-700 font-medium">
+                    Four-stage peer accountability system for resolving milestone defaults and ghosted deliverables.
+                  </p>
                 </div>
-
-                <div className="space-y-3">
-                  <div className="border-2 border-ink p-3 bg-canvas flex items-center justify-between">
-                    <div>
-                      <h4 className="font-bold text-sm">Implement Raft consensus election</h4>
-                      <span className="text-xs text-neutral-600">Assignee: Alex (Owner)</span>
-                    </div>
-                    <Badge variant="done">Done</Badge>
-                  </div>
-
-                  <div className="border-2 border-ink p-3 bg-canvas flex items-center justify-between">
-                    <div>
-                      <h4 className="font-bold text-sm">Draft system architecture diagrams</h4>
-                      <span className="text-xs text-neutral-600">Assignee: Taylor</span>
-                    </div>
-                    <Badge variant="in_progress">In Progress</Badge>
-                  </div>
-
-                  <div className="border-2 border-ink p-3 bg-canvas flex items-center justify-between">
-                    <div>
-                      <h4 className="font-bold text-sm">Write integration tests for failover</h4>
-                      <span className="text-xs text-neutral-600">Assignee: Jordan</span>
-                    </div>
-                    <Badge variant="todo">To-Do</Badge>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Evidence Submission Preview */}
-              <Card shadow="normal" className="p-6 space-y-4">
-                <div className="flex items-center justify-between border-b-2 border-ink pb-3">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-ink" />
-                    <h3 className="font-black uppercase text-lg">Evidence Dossier</h3>
-                  </div>
-                  <Badge variant="open" size="sm">
-                    Case #1 Open
-                  </Badge>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="border-2 border-ink p-3 bg-white">
-                    <div className="flex items-center justify-between text-xs font-bold text-neutral-600 mb-1">
-                      <span>Submitted by Alex Rivera</span>
-                      <span>Note</span>
-                    </div>
-                    <p className="text-sm">
-                      "Git log indicates Jordan pushed 0 commits in the entire 3-week milestone period."
-                    </p>
-                  </div>
-
-                  <div className="border-2 border-ink p-3 bg-white">
-                    <div className="flex items-center justify-between text-xs font-bold text-neutral-600 mb-1">
-                      <span>Submitted by Taylor Kim</span>
-                      <span>Note</span>
-                    </div>
-                    <p className="text-sm">
-                      "Discord meeting minutes demonstrate Jordan claimed microphone failure and disappeared."
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </section>
-
-          {/* =========================================================================
-            SECTION 4: COMPONENT SPEC & DESIGN TOKENS SHOWCASE
-           ========================================================================= */}
-        <section id="component-spec" aria-labelledby="spec-title" className="space-y-6">
-          <div className="border-b-3 border-ink pb-2">
-            <h2 id="spec-title" className="text-2xl sm:text-3xl font-black uppercase">
-              Design System Specification
-            </h2>
-            <p className="text-sm text-neutral-700">
-              Verified tokens: Canvas <code className="bg-white border px-1">#FFFDF5</code>, Hot Red <code className="bg-white border px-1">#FF6B6B</code>, Vivid Yellow <code className="bg-white border px-1">#FFD93D</code>, Soft Violet <code className="bg-white border px-1">#C4B5FD</code>.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Interactive Form Field Verification */}
-            <Card shadow="normal" className="p-6 space-y-4">
-              <h3 className="font-black uppercase text-lg border-b-2 border-ink pb-2">
-                Accessible Form Controls
-              </h3>
-
-              <FormField
-                label="Defendant Display Name"
-                placeholder="e.g. Jordan Lee"
-                value={demoInput}
-                onChange={(e) => {
-                  setDemoInput(e.target.value);
-                  if (demoError) setDemoError('');
-                }}
-                error={demoError}
-                helperText="Name of the team member regarding contribution dispute."
-                required
-              />
-
-              <div className="flex items-center gap-3">
-                <Button variant="secondary" size="md" onClick={handleTestValidate}>
-                  Validate Input
-                </Button>
-                <Button variant="neutral" size="md" onClick={() => { setDemoInput(''); setDemoError(''); }}>
-                  Clear
-                </Button>
+                <Badge variant="fair" size="md">
+                  Standard Court Flow
+                </Badge>
               </div>
-            </Card>
 
-            {/* Neo-brutalist Button Styles */}
-            <Card shadow="normal" className="p-6 space-y-4">
-              <h3 className="font-black uppercase text-lg border-b-2 border-ink pb-2">
-                Tactile Buttons & States
-              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card shadow="normal" className="p-6 bg-white space-y-3">
+                  <div className="w-10 h-10 bg-vivid-yellow border-2 border-ink flex items-center justify-center font-black text-lg">
+                    1
+                  </div>
+                  <h3 className="font-black uppercase text-base text-ink">
+                    Track Milestones & Tasks
+                  </h3>
+                  <p className="text-xs text-neutral-700 leading-relaxed font-medium">
+                    Assign sprint responsibilities on the interactive Kanban board. All status transitions are logged with immutable forensic timestamps.
+                  </p>
+                </Card>
 
-              <div className="grid grid-cols-2 gap-3">
-                <Button variant="primary">Hot Red</Button>
-                <Button variant="secondary">Vivid Yellow</Button>
-                <Button variant="violet">Soft Violet</Button>
-                <Button variant="neutral">Neutral White</Button>
-                <Button variant="primary" isLoading>Loading</Button>
-                <Button variant="secondary" disabled>Disabled</Button>
+                <Card shadow="normal" className="p-6 bg-white space-y-3">
+                  <div className="w-10 h-10 bg-hot-red text-white border-2 border-ink flex items-center justify-center font-black text-lg">
+                    2
+                  </div>
+                  <h3 className="font-black uppercase text-base text-ink">
+                    File Dispute & Admit Evidence
+                  </h3>
+                  <p className="text-xs text-neutral-700 leading-relaxed font-medium">
+                    When ghosting or milestone failure occurs, file a petition with sworn testimony and verified Git commit URLs in the evidence locker.
+                  </p>
+                </Card>
+
+                <Card shadow="normal" className="p-6 bg-white space-y-3">
+                  <div className="w-10 h-10 bg-soft-violet border-2 border-ink flex items-center justify-center font-black text-lg">
+                    3
+                  </div>
+                  <h3 className="font-black uppercase text-base text-ink">
+                    Jury Poll & Verdict Engine
+                  </h3>
+                  <p className="text-xs text-neutral-700 leading-relaxed font-medium">
+                    Team peers cast secret juror votes. The server calculates majority consensus and delivers an official satirical ruling stamped on public record.
+                  </p>
+                </Card>
               </div>
-            </Card>
-          </div>
-        </section>
+            </section>
                 </>
               )
             )}
@@ -510,10 +401,10 @@ function AppContent() {
           <div className="flex items-center gap-2">
             <Gavel className="w-5 h-5 text-hot-red" />
             <span className="font-black uppercase text-sm">Group Project Court</span>
-            <span className="text-xs text-neutral-500">• Seven-Day Delivery Architecture</span>
+            <span className="text-xs text-neutral-500">• Peer Accountability & Verdict Engine</span>
           </div>
           <div className="text-xs text-neutral-600 font-bold uppercase tracking-wider">
-            Zero Mistakes • Phases 1-6 Core System Complete
+            Satirical & Playful Student Tribunal
           </div>
         </div>
       </footer>
