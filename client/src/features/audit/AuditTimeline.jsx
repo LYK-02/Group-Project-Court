@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { History, User, Activity, RefreshCw, AlertCircle, ShieldAlert } from 'lucide-react';
+import { History, User, RefreshCw, AlertCircle } from 'lucide-react';
 import { Card } from '../../components/Card.jsx';
 import { Button } from '../../components/Button.jsx';
 import { Badge } from '../../components/Badge.jsx';
