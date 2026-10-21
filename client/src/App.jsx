@@ -249,6 +249,15 @@ function AppContent() {
                   </p>
                 </Card>
               </div>
+
+              {healthError && (
+                <div className="p-4 bg-hot-red text-white font-bold border-3 border-ink shadow-hard-sm flex items-center justify-between">
+                  <span>Health Verification Alert: {healthError}</span>
+                  <Button variant="neutral" size="sm" onClick={checkHealth}>
+                    Retry
+                  </Button>
+                </div>
+              )}
             </section>
           </>
         )}
