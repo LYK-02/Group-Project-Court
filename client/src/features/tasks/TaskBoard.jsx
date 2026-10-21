@@ -10,6 +10,8 @@ import {
   ArrowLeft,
   CheckCircle2,
   RefreshCw,
+  Search,
+  X,
 } from 'lucide-react';
 import { Card } from '../../components/Card.jsx';
 import { Button } from '../../components/Button.jsx';
@@ -27,6 +29,10 @@ export function TaskBoard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterAssignee, setFilterAssignee] = useState('all');
+
   // New task modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -35,6 +41,21 @@ export function TaskBoard() {
   const [newDueAt, setNewDueAt] = useState('');
   const [modalError, setModalError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Fast action accelerator: 'n' opens new task dialog
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        setIsModalOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const fetchTasks = useCallback(async () => {
     if (!activeTeamId) {
@@ -123,27 +144,44 @@ export function TaskBoard() {
     );
   }
 
+  const filteredTasks = tasks.filter((t) => {
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      t.title.toLowerCase().includes(q) ||
+      t.description?.toLowerCase().includes(q) ||
+      t.assignee?.displayName?.toLowerCase().includes(q);
+
+    const matchesAssignee =
+      filterAssignee === 'all' ||
+      (filterAssignee === 'unassigned' && !t.assignee) ||
+      t.assignee?.id === filterAssignee ||
+      t.assigneeId === filterAssignee;
+
+    return matchesSearch && matchesAssignee;
+  });
+
   const columns = [
     {
       id: 'todo',
       title: 'To-Do / Assigned',
       bgColor: 'bg-neutral-100',
       badgeColor: 'draft',
-      tasks: tasks.filter((t) => t.status === 'todo'),
+      tasks: filteredTasks.filter((t) => t.status === 'todo'),
     },
     {
       id: 'in_progress',
       title: 'In Progress / Active',
       bgColor: 'bg-vivid-yellow/20',
       badgeColor: 'needs_review',
-      tasks: tasks.filter((t) => t.status === 'in_progress'),
+      tasks: filteredTasks.filter((t) => t.status === 'in_progress'),
     },
     {
       id: 'done',
       title: 'Completed / Evidenced',
       bgColor: 'bg-[#22c55e]/15',
       badgeColor: 'fair',
-      tasks: tasks.filter((t) => t.status === 'done'),
+      tasks: filteredTasks.filter((t) => t.status === 'done'),
     },
   ];
 
@@ -157,7 +195,7 @@ export function TaskBoard() {
               Task Kanban & Deliverables
             </h1>
             <Badge variant="fair" size="md">
-              {tasks.length} {tasks.length === 1 ? 'Task' : 'Tasks'}
+              {filteredTasks.length} of {tasks.length} {tasks.length === 1 ? 'Task' : 'Tasks'}
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-neutral-600 font-bold mt-1">
@@ -182,10 +220,55 @@ export function TaskBoard() {
             size="sm"
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-1.5"
+            title="Assign deliverable (Shortcut: N)"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             <span>Assign New Task</span>
+            <kbd className="hidden sm:inline bg-canvas border border-ink px-1 text-[10px] font-mono font-black ml-1">N</kbd>
           </Button>
+        </div>
+      </div>
+
+      {/* Search & Assignee Filter Bar */}
+      <div className="bg-white border-3 border-ink p-4 shadow-hard-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:max-w-md">
+          <Search className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search deliverables by title or assignee..."
+            className="w-full bg-canvas border-2 border-ink pl-9 pr-8 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-vivid-yellow"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-ink cursor-pointer"
+              title="Clear search"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <span className="text-xs font-bold uppercase tracking-wider text-neutral-600 shrink-0">
+            Assignee:
+          </span>
+          <select
+            value={filterAssignee}
+            onChange={(e) => setFilterAssignee(e.target.value)}
+            className="w-full sm:w-auto bg-canvas border-2 border-ink py-2 px-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-vivid-yellow"
+          >
+            <option value="all">All Members ({tasks.length})</option>
+            <option value="unassigned">Unassigned Only</option>
+            {activeTeam?.members?.map((m) => (
+              <option key={m.userId || m.id} value={m.userId || m.id}>
+                {m.displayName}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -402,6 +485,7 @@ export function TaskBoard() {
                   type="date"
                   value={newDueAt}
                   onChange={(e) => setNewDueAt(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
                   className="w-full bg-white border-3 border-ink p-2 text-sm focus:outline-none focus:ring-2 focus:ring-vivid-yellow font-bold"
                 />
               </div>
