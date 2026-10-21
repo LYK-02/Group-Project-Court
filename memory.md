@@ -79,7 +79,7 @@
 | Phase | Description | Status | Git Branch / PR | Verification |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | Foundation and Design: Monorepo, database schema, Neon cloud connection, health checks, design tokens, UI shell. | **Done (Merged)** | `main` (PR #1, #2, #3 merged) | Migrations passed on Neon, live health check verified, 100% tests passing. |
-| **Phase 2** | Authentication and Teams: User register/login/logout, team management, invite codes, role authorization, team dashboard. | **Done** | `feat/phase-2-auth-and-teams` (PR #4) | 29 server integration tests passing, 9 client tests passing, 100% lint & Vite build verified. |
+| **Phase 2** | Authentication and Teams: User register/login/logout, team management, invite codes, role authorization, team dashboard. | **Done** | `feat/phase-2-auth-and-teams` (PR #6) | 29 server integration tests passing, 9 client tests passing, 100% lint & Vite build verified. |
 | **Phase 3** | Tasks & Audit History: Task CRUD, status updates, team assignment verification, audit events log. | Pending | TBD | Pending |
 | **Phase 4** | Cases, Evidence, Voting & Verdict: Dispute cases, evidence uploads, single-vote constraint, verdict engine. | Pending | TBD | Pending |
 | **Phase 5** | UI Polish & Public Sharing: Courtroom UI, responsive layouts, empty/loading states, sanitized public shares. | Pending | TBD | Pending |
