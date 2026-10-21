@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Gavel, Menu, X, Activity, User, LogOut, Users, CheckSquare, History } from 'lucide-react';
+import { Gavel, Menu, X, Activity, User, LogOut, Users, CheckSquare, History, Keyboard } from 'lucide-react';
 import { Badge } from './Badge.jsx';
 import { Button } from './Button.jsx';
 import { useAuth } from '../features/auth/AuthContext.jsx';
@@ -10,6 +10,7 @@ export function Navbar({
   activeView = 'courtroom',
   setActiveView = () => {},
   onOpenAuth = () => {},
+  onOpenShortcuts = () => {},
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
@@ -99,7 +100,7 @@ export function Navbar({
               <span>Audit Ledger</span>
             </button>
 
-            {/* Live API Health Status Badge */}
+            {/* Live API Health Status Badge & Keyboard Shortcuts */}
             <div className="flex items-center gap-2 pl-2 border-l-2 border-neutral-300">
               <Activity className="w-4 h-4 text-neutral-600" />
               <Badge
@@ -109,6 +110,17 @@ export function Navbar({
               >
                 API: {apiStatus}
               </Badge>
+
+              <button
+                type="button"
+                onClick={onOpenShortcuts}
+                className="p-1.5 border-2 border-ink bg-canvas shadow-hard-xs text-xs font-mono font-bold hover:bg-vivid-yellow neo-press cursor-pointer flex items-center gap-1 ml-1"
+                title="Keyboard Shortcuts (?)"
+                aria-label="View Keyboard Shortcuts"
+              >
+                <Keyboard className="w-3.5 h-3.5 text-ink" />
+                <kbd className="text-[10px] bg-white border border-ink px-1 font-black">?</kbd>
+              </button>
             </div>
 
             {/* Auth State & User Controls */}
@@ -207,6 +219,20 @@ export function Navbar({
           >
             <History className="w-4 h-4" />
             <span>Audit Ledger</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onOpenShortcuts();
+              setMobileMenuOpen(false);
+            }}
+            className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer flex items-center justify-between"
+          >
+            <span className="flex items-center gap-2">
+              <Keyboard className="w-4 h-4" />
+              <span>Keyboard Shortcuts</span>
+            </span>
+            <kbd className="text-xs bg-white border border-ink px-1.5 font-mono font-black">?</kbd>
           </button>
 
           <div className="pt-2 flex flex-col gap-2">
