@@ -202,8 +202,18 @@ describe('Phases 3-5: Tasks, Courtroom Cases, Voting, Verdicts, and Public Dossi
       });
 
       expect(screen.getByText('Assemble Mechanical Cogwheels')).toBeInTheDocument();
-      expect(screen.getByText('Ada Lovelace')).toBeInTheDocument();
+      expect(screen.getAllByText('Ada Lovelace').length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText('Unassigned')).toBeInTheDocument();
+
+      // Test deliverable search filtering
+      const searchInput = screen.getByPlaceholderText(/search deliverables/i);
+      fireEvent.change(searchInput, { target: { value: 'Bernoulli' } });
+      expect(screen.getByText('Draft Bernoulli Number Algorithm')).toBeInTheDocument();
+      expect(screen.queryByText('Assemble Mechanical Cogwheels')).not.toBeInTheDocument();
+
+      // Clear search
+      fireEvent.change(searchInput, { target: { value: '' } });
+      expect(screen.getByText('Assemble Mechanical Cogwheels')).toBeInTheDocument();
     });
 
     it('opens create task modal when clicking Assign New Task button', async () => {
