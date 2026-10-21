@@ -89,11 +89,11 @@ Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.con
 | Phase | Description | Status | Git Branch / PR | Verification |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | Foundation and Design: Monorepo, database schema, Neon cloud connection, health checks, design tokens, UI shell. | **Done (Merged)** | `main` (PR #1, #2, #3 merged) | Migrations passed on Neon, live health check verified, 100% tests passing. |
-| **Phase 2** | Authentication and Teams: User register/login/logout, team management, invite codes, role authorization, team dashboard. | **Done** | `feat/phase-2-auth-and-teams` (PR #6) | 29 server integration tests passing, 9 client tests passing, 100% lint & Vite build verified. |
-| **Phase 3** | Tasks & Audit History: Task CRUD, status updates, team assignment verification, audit events log. | Pending | TBD | Pending |
-| **Phase 4** | Cases, Evidence, Voting & Verdict: Dispute cases, evidence uploads, single-vote constraint, verdict engine. | Pending | TBD | Pending |
-| **Phase 5** | UI Polish & Public Sharing: Courtroom UI, responsive layouts, empty/loading states, sanitized public shares. | Pending | TBD | Pending |
-| **Phase 6** | Testing, Hardening & Deployment: Security audits, stress testing, end-to-end flows, production verification. | Pending | TBD | Pending |
+| **Phase 2** | Authentication and Teams: User register/login/logout, team management, invite codes, role authorization, team dashboard. | **Done (Merged)** | `main` (PR #6 merged) | 29 server integration tests passing, 9 client tests passing, 100% lint & Vite build verified. |
+| **Phase 3** | Tasks & Audit History: Task CRUD, status updates, team assignment verification, immutable audit events log. | **Done** | `feat/phases-3-to-6-core-system` (PR #7) | 9 integration tests passing, assignee membership validation, transaction rollback, audit trail tracking. |
+| **Phase 4** | Cases, Evidence, Voting & Verdict: Dispute cases, evidence exhibits (note/URL), single-vote constraint, concurrency-safe verdict engine. | **Done** | `feat/phases-3-to-6-core-system` (PR #7) | 12 integration tests passing, FOR UPDATE concurrency locking, satirical consensus calculations, public token hashing. |
+| **Phase 5** | UI Polish & Public Sharing: Neo-brutalist Courtroom docket, interactive TaskBoard Kanban, AuditTimeline ledger, PublicVerdictView. | **Done** | `feat/phases-3-to-6-core-system` (PR #7) | 5 client component tests passing, tactile buttons, verdict stamp, full desktop & mobile navigation. |
+| **Phase 6** | Testing, Hardening & Deployment: Security audits, stress testing, end-to-end flows, production verification. | **Done** | `feat/phases-3-to-6-core-system` (PR #7) | 64/64 tests passing across monorepo (50 server + 14 client), 0 lint errors, production Vite build verified. |
 | **Phase 7** | Demo Readiness: Seed fictional courtroom showcase, demo scripts, architecture walkthrough, documentation freeze. | Pending | TBD | Pending |
 
 ---
