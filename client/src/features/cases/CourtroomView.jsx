@@ -76,6 +76,21 @@ export function CourtroomView({ onOpenPublicCase }) {
     fetchCases();
   }, [fetchCases]);
 
+  // Fast action accelerator: 'n' opens file dispute modal when on cases list
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (!selectedCaseId && (e.key === 'n' || e.key === 'N')) {
+        e.preventDefault();
+        setIsFilingOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedCaseId]);
+
   // Load single case dossier
   const fetchCaseDetail = useCallback(async (caseId) => {
     if (!caseId || !activeTeamId) {
@@ -350,7 +365,7 @@ export function CourtroomView({ onOpenPublicCase }) {
               </div>
 
               {/* Vote Stats Bar */}
-              <div className="space-y-2">
+              <div className="space-y-2" aria-live="polite">
                 <div className="flex items-center justify-between text-xs font-black uppercase">
                   <span className="text-[#15803d]">Fair: {caseDetail.voteStats?.fair || 0}</span>
                   <span className="text-amber-800">
@@ -752,9 +767,11 @@ export function CourtroomView({ onOpenPublicCase }) {
                 size="sm"
                 onClick={() => setIsFilingOpen(true)}
                 className="flex items-center gap-1.5"
+                title="File new dispute petition (Shortcut: N)"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
                 <span>File New Dispute</span>
+                <kbd className="hidden sm:inline bg-canvas border border-ink px-1 text-[10px] font-mono font-black ml-1">N</kbd>
               </Button>
             </div>
           </div>
