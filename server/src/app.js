@@ -11,6 +11,7 @@ import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
 import teamsRouter from './routes/teams.js';
 import tasksRouter from './routes/tasks.js';
+import casesRouter from './routes/cases.js';
 
 export function createApp() {
   const app = express();
@@ -71,6 +72,7 @@ export function createApp() {
   app.use('/api/v1', authRouter);
   app.use('/api/v1', teamsRouter);
   app.use('/api/v1', tasksRouter);
+  app.use('/api/v1', casesRouter);
 
   // 8. 404 and Error Handling
   app.use(notFoundHandler);
