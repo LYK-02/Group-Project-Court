@@ -14,6 +14,11 @@ export const caseIdParamSchema = z.object({
   caseId: z.string().uuid('Invalid Case ID format.'),
 });
 
+export const teamAndCaseParamsSchema = z.object({
+  teamId: z.string().uuid('Invalid Team ID format.'),
+  caseId: z.string().uuid('Invalid Case ID format.'),
+});
+
 export const createEvidenceSchema = z.object({
   kind: z.enum(['note', 'url'], {
     required_error: 'Evidence kind must be note or url.',
