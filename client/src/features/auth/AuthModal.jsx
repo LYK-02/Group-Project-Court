@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Lock, Mail, User as UserIcon, AlertTriangle } from 'lucide-react';
+import { X, Lock, AlertTriangle } from 'lucide-react';
 import { useAuth } from './AuthContext.jsx';
 import { FormField } from '../../components/FormField.jsx';
 import { Button } from '../../components/Button.jsx';
