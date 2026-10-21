@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Gavel,
-  Scale,
   AlertTriangle,
-  CheckCircle2,
-  ShieldCheck,
-  RefreshCw,
   Lock,
 } from 'lucide-react';
 import { Navbar } from './components/Navbar.jsx';
@@ -25,7 +21,7 @@ import { AuditTimeline } from './features/audit/AuditTimeline.jsx';
 import { api } from './lib/api.js';
 
 function AppContent() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { activeTeam } = useTeam();
 
   const [activeView, setActiveView] = useState('courtroom'); // 'courtroom' | 'tasks' | 'teams' | 'audit'
@@ -100,6 +96,14 @@ function AppContent() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+        {healthError && (
+          <div className="p-4 bg-hot-red text-white font-bold border-3 border-ink shadow-hard-sm flex items-center justify-between">
+            <span>API Connection Alert: {healthError}</span>
+            <Button variant="neutral" size="sm" onClick={checkHealth}>
+              Retry
+            </Button>
+          </div>
+        )}
         {/* =========================================================================
             PUBLIC CASE VIEW (IF ACCESSING VIA SHARE LINK)
            ========================================================================= */}
@@ -260,11 +264,6 @@ function AppContent() {
                     >
                       {isAuthenticated ? 'Join via Invite' : 'Witness Login'}
                     </Button>
-
-                    <Button variant="neutral" size="lg" onClick={checkHealth}>
-                      <RefreshCw className={`w-4 h-4 mr-2 ${healthLoading ? 'animate-spin' : ''}`} />
-                      Health Check
-                    </Button>
                   </div>
 
                   {/* Satirical entertainment disclaimer per PRD */}
@@ -295,65 +294,6 @@ function AppContent() {
               </div>
             </section>
 
-            {/* Phase 1 & 2 System Verification Section */}
-            <section aria-labelledby="foundation-health-title" className="space-y-4">
-              <div className="flex items-center justify-between border-b-3 border-ink pb-2">
-                <h2 id="foundation-health-title" className="text-2xl sm:text-3xl font-black uppercase">
-                  Platform Verification Gate
-                </h2>
-                <Badge variant={healthData ? 'fair' : 'unfair'} size="md">
-                  {healthData ? 'REST API VERIFIED' : 'CONNECTIVITY CHECK'}
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card shadow="normal" className="p-5 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-neutral-600">Express API</span>
-                    <ShieldCheck className="w-5 h-5 text-ink" />
-                  </div>
-                  <div className="text-2xl font-black">{healthLoading ? 'Probing...' : healthData?.status || 'Offline'}</div>
-                  <p className="text-xs text-neutral-600">
-                    Liveness endpoint at <code className="bg-canvas border px-1">/api/v1/health</code> with Helmet security headers & CORS origin isolation.
-                  </p>
-                </Card>
-
-                <Card shadow="normal" className="p-5 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-neutral-600">Neon PostgreSQL Engine</span>
-                    <Scale className="w-5 h-5 text-ink" />
-                  </div>
-                  <div className="text-2xl font-black">
-                    {healthLoading ? 'Checking...' : healthData?.database?.status || 'Connected'}
-                  </div>
-                  <p className="text-xs text-neutral-600">
-                    Neon cloud instance with connection pooler and unpooled migration runner.
-                  </p>
-                </Card>
-
-                <Card shadow="normal" className="p-5 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-neutral-600">Authentication & Teams</span>
-                    <CheckCircle2 className="w-5 h-5 text-ink" />
-                  </div>
-                  <div className="text-2xl font-black">
-                    {isAuthenticated ? `Signed In (${user?.displayName?.split(' ')[0]})` : 'Guest Session'}
-                  </div>
-                  <p className="text-xs text-neutral-600">
-                    Bcrypt password hashing, HTTP-only secure cookie sessions, and invite token hashing.
-                  </p>
-                </Card>
-              </div>
-
-              {healthError && (
-                <div className="p-4 bg-hot-red text-white font-bold border-3 border-ink shadow-hard-sm flex items-center justify-between">
-                  <span>Health Verification Alert: {healthError}</span>
-                  <Button variant="neutral" size="sm" onClick={checkHealth}>
-                    Retry
-                  </Button>
-                </div>
-              )}
-            </section>
 
             {/* Jurisdictional Workflow Overview */}
             <section aria-labelledby="workflow-title" className="space-y-6">
