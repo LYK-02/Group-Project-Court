@@ -20,13 +20,21 @@ import { AuthProvider, useAuth } from './features/auth/AuthContext.jsx';
 import { AuthModal } from './features/auth/AuthModal.jsx';
 import { TeamProvider, useTeam } from './features/teams/TeamContext.jsx';
 import { TeamDashboard } from './features/teams/TeamDashboard.jsx';
+import { TaskBoard } from './features/tasks/TaskBoard.jsx';
+import { CourtroomView } from './features/cases/CourtroomView.jsx';
+import { PublicVerdictView } from './features/cases/PublicVerdictView.jsx';
+import { AuditTimeline } from './features/audit/AuditTimeline.jsx';
 import { api } from './lib/api.js';
 
 function AppContent() {
   const { isAuthenticated, user } = useAuth();
   const { activeTeam } = useTeam();
 
-  const [activeView, setActiveView] = useState('courtroom'); // 'courtroom' | 'teams' | 'cases'
+  const [activeView, setActiveView] = useState('courtroom'); // 'courtroom' | 'tasks' | 'teams' | 'audit'
+  const [publicToken, setPublicToken] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('share') || null;
+  });
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState('login');
 
@@ -80,44 +88,118 @@ function AppContent() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
         {/* =========================================================================
-            VIEW 1: TEAMS & ROSTER JURISDICTION (PHASE 2)
+            PUBLIC CASE VIEW (IF ACCESSING VIA SHARE LINK)
            ========================================================================= */}
-        {activeView === 'teams' ? (
-          isAuthenticated ? (
-            <TeamDashboard />
-          ) : (
-            <section className="bg-white border-4 border-ink p-8 sm:p-12 shadow-hard-lg max-w-2xl mx-auto text-center space-y-6">
-              <div className="w-16 h-16 bg-vivid-yellow border-3 border-ink shadow-hard-sm mx-auto flex items-center justify-center">
-                <Lock className="w-8 h-8 text-ink stroke-[2.5]" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black uppercase text-ink">
-                Authentication Required
-              </h2>
-              <p className="text-sm sm:text-base text-neutral-700 max-w-md mx-auto leading-relaxed">
-                Access to project rosters, invite tokens, and jurisdictional member management is restricted to accredited witnesses.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-                <Button variant="secondary" size="md" onClick={() => openAuth('login')}>
-                  Log In
-                </Button>
-                <Button variant="primary" size="md" onClick={() => openAuth('register')}>
-                  Create Account
-                </Button>
-              </div>
-            </section>
-          )
-        ) : null}
-
-        {/* =========================================================================
-            VIEW 2: COURTROOM HERO (ALWAYS AVAILABLE OR DEFAULT)
-           ========================================================================= */}
-        {activeView === 'courtroom' && (
+        {publicToken ? (
+          <PublicVerdictView
+            token={publicToken}
+            onBack={() => {
+              setPublicToken(null);
+              window.history.replaceState({}, '', window.location.pathname);
+            }}
+          />
+        ) : (
           <>
-            <section
-              id="courtroom-mode"
-              aria-labelledby="courtroom-headline"
-              className="relative bg-white border-4 border-ink p-6 sm:p-12 shadow-hard-lg bg-grid-pattern overflow-hidden"
-            >
+            {/* =====================================================================
+                VIEW 1: TEAMS & ROSTER JURISDICTION
+               ===================================================================== */}
+            {activeView === 'teams' && (
+              isAuthenticated ? (
+                <TeamDashboard />
+              ) : (
+                <section className="bg-white border-4 border-ink p-8 sm:p-12 shadow-hard-lg max-w-2xl mx-auto text-center space-y-6">
+                  <div className="w-16 h-16 bg-vivid-yellow border-3 border-ink shadow-hard-sm mx-auto flex items-center justify-center">
+                    <Lock className="w-8 h-8 text-ink stroke-[2.5]" />
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-black uppercase text-ink">
+                    Authentication Required
+                  </h2>
+                  <p className="text-sm sm:text-base text-neutral-700 max-w-md mx-auto leading-relaxed">
+                    Access to project rosters, invite tokens, and jurisdictional member management is restricted to accredited witnesses.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                    <Button variant="secondary" size="md" onClick={() => openAuth('login')}>
+                      Log In
+                    </Button>
+                    <Button variant="primary" size="md" onClick={() => openAuth('register')}>
+                      Create Account
+                    </Button>
+                  </div>
+                </section>
+              )
+            )}
+
+            {/* =====================================================================
+                VIEW 2: TASK BOARD & KANBAN
+               ===================================================================== */}
+            {activeView === 'tasks' && (
+              isAuthenticated ? (
+                <TaskBoard />
+              ) : (
+                <section className="bg-white border-4 border-ink p-8 sm:p-12 shadow-hard-lg max-w-2xl mx-auto text-center space-y-6">
+                  <div className="w-16 h-16 bg-soft-violet border-3 border-ink shadow-hard-sm mx-auto flex items-center justify-center">
+                    <Lock className="w-8 h-8 text-ink stroke-[2.5]" />
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-black uppercase text-ink">
+                    Authentication Required
+                  </h2>
+                  <p className="text-sm sm:text-base text-neutral-700 max-w-md mx-auto leading-relaxed">
+                    Access to team task boards, kanban lanes, and milestone deliverables is restricted to accredited members.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                    <Button variant="secondary" size="md" onClick={() => openAuth('login')}>
+                      Log In
+                    </Button>
+                    <Button variant="primary" size="md" onClick={() => openAuth('register')}>
+                      Create Account
+                    </Button>
+                  </div>
+                </section>
+              )
+            )}
+
+            {/* =====================================================================
+                VIEW 3: FORENSIC AUDIT LEDGER
+               ===================================================================== */}
+            {activeView === 'audit' && (
+              isAuthenticated ? (
+                <AuditTimeline />
+              ) : (
+                <section className="bg-white border-4 border-ink p-8 sm:p-12 shadow-hard-lg max-w-2xl mx-auto text-center space-y-6">
+                  <div className="w-16 h-16 bg-neutral-200 border-3 border-ink shadow-hard-sm mx-auto flex items-center justify-center">
+                    <Lock className="w-8 h-8 text-ink stroke-[2.5]" />
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-black uppercase text-ink">
+                    Authentication Required
+                  </h2>
+                  <p className="text-sm sm:text-base text-neutral-700 max-w-md mx-auto leading-relaxed">
+                    Access to the immutable team audit ledger and forensic logs requires accredited witness credentials.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                    <Button variant="secondary" size="md" onClick={() => openAuth('login')}>
+                      Log In
+                    </Button>
+                    <Button variant="primary" size="md" onClick={() => openAuth('register')}>
+                      Create Account
+                    </Button>
+                  </div>
+                </section>
+              )
+            )}
+
+            {/* =====================================================================
+                VIEW 4: COURTROOM DOCKET (IF AUTHENTICATED) OR HERO (IF LOGGED OUT)
+               ===================================================================== */}
+            {activeView === 'courtroom' && (
+              isAuthenticated ? (
+                <CourtroomView onOpenPublicCase={(token) => setPublicToken(token)} />
+              ) : (
+                <>
+                  <section
+                    id="courtroom-mode"
+                    aria-labelledby="courtroom-headline"
+                    className="relative bg-white border-4 border-ink p-6 sm:p-12 shadow-hard-lg bg-grid-pattern overflow-hidden"
+                  >
               {/* Top Tape Sticker Motif */}
               <div className="inline-block bg-vivid-yellow border-2 border-ink px-4 py-1 text-xs font-black uppercase tracking-widest -rotate-2 mb-6 shadow-hard-sm">
                 Docket № 2026-FINAL-EXAM • Evidence Admitted
@@ -259,14 +341,9 @@ function AppContent() {
                 </div>
               )}
             </section>
-          </>
-        )}
 
-        {/* =========================================================================
-            VIEW 3: CASE-FILE MODE (PREVIEW STRUCTURE)
-           ========================================================================= */}
-        {(activeView === 'cases' || activeView === 'courtroom') && (
-          <section id="case-file-mode" aria-labelledby="case-file-title" className="space-y-6">
+            {/* Neo-Brutalist Component Gallery */}
+            <section id="case-file-mode" aria-labelledby="case-file-title" className="space-y-6">
             <div className="border-b-3 border-ink pb-2">
               <h2 id="case-file-title" className="text-2xl sm:text-3xl font-black uppercase">
                 Case-File Mode — Clean Data Layout
@@ -352,9 +429,8 @@ function AppContent() {
               </Card>
             </div>
           </section>
-        )}
 
-        {/* =========================================================================
+          {/* =========================================================================
             SECTION 4: COMPONENT SPEC & DESIGN TOKENS SHOWCASE
            ========================================================================= */}
         <section id="component-spec" aria-labelledby="spec-title" className="space-y-6">
@@ -414,6 +490,11 @@ function AppContent() {
             </Card>
           </div>
         </section>
+                </>
+              )
+            )}
+          </>
+        )}
       </main>
 
       {/* Auth Modal */}
@@ -432,7 +513,7 @@ function AppContent() {
             <span className="text-xs text-neutral-500">• Seven-Day Delivery Architecture</span>
           </div>
           <div className="text-xs text-neutral-600 font-bold uppercase tracking-wider">
-            Zero Mistakes • Day 2 Auth & Teams Complete
+            Zero Mistakes • Phases 1-6 Core System Complete
           </div>
         </div>
       </footer>
