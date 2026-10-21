@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Gavel, Menu, X, Activity, User, LogOut, Users } from 'lucide-react';
+import { Gavel, Menu, X, Activity, User, LogOut, Users, CheckSquare, History } from 'lucide-react';
 import { Badge } from './Badge.jsx';
 import { Button } from './Button.jsx';
 import { useAuth } from '../features/auth/AuthContext.jsx';
@@ -50,13 +50,27 @@ export function Navbar({
             <button
               type="button"
               onClick={() => handleNavClick('courtroom')}
-              className={`font-bold uppercase tracking-wider text-sm cursor-pointer transition-colors ${
+              className={`font-bold uppercase tracking-wider text-sm flex items-center gap-1.5 cursor-pointer transition-colors ${
                 activeView === 'courtroom'
                   ? 'text-ink underline decoration-hot-red decoration-3 underline-offset-4'
                   : 'text-neutral-600 hover:text-ink'
               }`}
             >
-              Courtroom
+              <Gavel className="w-4 h-4" />
+              <span>Courtroom</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleNavClick('tasks')}
+              className={`font-bold uppercase tracking-wider text-sm flex items-center gap-1.5 cursor-pointer transition-colors ${
+                activeView === 'tasks'
+                  ? 'text-ink underline decoration-soft-violet decoration-3 underline-offset-4'
+                  : 'text-neutral-600 hover:text-ink'
+              }`}
+            >
+              <CheckSquare className="w-4 h-4" />
+              <span>Tasks</span>
             </button>
 
             <button
@@ -74,14 +88,15 @@ export function Navbar({
 
             <button
               type="button"
-              onClick={() => handleNavClick('cases')}
-              className={`font-bold uppercase tracking-wider text-sm cursor-pointer transition-colors ${
-                activeView === 'cases'
-                  ? 'text-ink underline decoration-soft-violet decoration-3 underline-offset-4'
+              onClick={() => handleNavClick('audit')}
+              className={`font-bold uppercase tracking-wider text-sm flex items-center gap-1.5 cursor-pointer transition-colors ${
+                activeView === 'audit'
+                  ? 'text-ink underline decoration-neutral-800 decoration-3 underline-offset-4'
                   : 'text-neutral-600 hover:text-ink'
               }`}
             >
-              Case Files
+              <History className="w-4 h-4" />
+              <span>Audit Ledger</span>
             </button>
 
             {/* Live API Health Status Badge */}
@@ -161,24 +176,37 @@ export function Navbar({
           <button
             type="button"
             onClick={() => handleNavClick('courtroom')}
-            className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer"
+            className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer flex items-center gap-2"
           >
-            Courtroom Mode
+            <Gavel className="w-4 h-4" />
+            <span>Courtroom Docket</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleNavClick('tasks')}
+            className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer flex items-center gap-2"
+          >
+            <CheckSquare className="w-4 h-4" />
+            <span>Task Board</span>
           </button>
           <button
             type="button"
             onClick={() => handleNavClick('teams')}
             className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer flex items-center justify-between"
           >
-            <span>Teams & Roster</span>
+            <span className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              <span>Teams & Roster</span>
+            </span>
             {activeTeam && <span className="text-xs font-normal">({activeTeam.name})</span>}
           </button>
           <button
             type="button"
-            onClick={() => handleNavClick('cases')}
-            className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer"
+            onClick={() => handleNavClick('audit')}
+            className="w-full text-left py-2 font-bold uppercase border-b-2 border-ink cursor-pointer flex items-center gap-2"
           >
-            Case Files Mode
+            <History className="w-4 h-4" />
+            <span>Audit Ledger</span>
           </button>
 
           <div className="pt-2 flex flex-col gap-2">
