@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Gavel, Scale, AlertCircle, FileText, Link as LinkIcon, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Gavel, Scale, AlertCircle, FileText, Link as LinkIcon, ArrowLeft } from 'lucide-react';
 import { Card } from '../../components/Card.jsx';
 import { Button } from '../../components/Button.jsx';
 import { Badge } from '../../components/Badge.jsx';
