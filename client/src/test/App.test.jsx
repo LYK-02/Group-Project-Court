@@ -116,6 +116,11 @@ describe('Client Foundation & Neo-Brutalist Shell', () => {
     expect(screen.queryByText(/design system specification/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/accessible form controls/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/verified tokens: canvas/i)).not.toBeInTheDocument();
+
+    // Verify Platform Verification Gate scaffolding is removed
+    expect(screen.queryByText(/platform verification gate/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/rest api verified/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^health check$/i })).not.toBeInTheDocument();
   });
 
   it('opens and closes keyboard shortcuts modal via trigger button and hotkey ?', async () => {
