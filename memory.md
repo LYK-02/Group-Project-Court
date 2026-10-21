@@ -102,12 +102,17 @@ Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.con
 
 - Installed Neon Agent Skills (in `.agents/skills/`):
   - `neon`: Core Neon Postgres platform guide
+  - `neon-ai-gateway`: Frontier and open-source LLMs gateway
   - `neon-auth`: Neon serverless auth
-  - `neon-branch-preview`: Ephemeral branch preview workflow
-  - `neon-cli`: Neon CLI interaction
-  - `neon-data-api`: Neon serverless HTTP data API
-  - `neon-database-mcp`: MCP database connectivity
   - `neon-functions`: Serverless functions
-  - `neon-pg-indexes`: Index optimization
-  - `neon-pg-tuning`: Query performance tuning
-- Pinned in `skills-lock.json`.
+  - `neon-object-storage`: S3-compatible object storage
+  - `neon-postgres`: Postgres connections, pooling, migrations
+  - `neon-postgres-branches`: Ephemeral branch preview workflow
+  - `neon-postgres-egress-optimizer`: Data transfer optimization
+  - `neon-realtime`: Reactive queries
+- Installed Impeccable Design Engine (`v0.1.16 linux-x64` in `.agents/skills/impeccable/`, registered in `.codex/hooks.json`).
+- **UI Button Verification & Unwanted Text Removal**:
+  - Removed obsolete Day 1 scaffolding cards, dummy test buttons, and hardcoded developer tokens from `client/src/App.jsx`.
+  - Replaced scaffolding with production "Jurisdictional Protocol" 3-step workflow.
+  - Verified all interactive buttons across Courtroom, Task Kanban, Teams & Roster, Audit Ledger, and Auth modal.
+  - Monorepo quality gates: 67/67 tests passing (50 server + 17 client), 0 ESLint warnings/errors, clean production bundle.
