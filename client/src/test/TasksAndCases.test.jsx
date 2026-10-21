@@ -6,7 +6,6 @@ import { PublicVerdictView } from '../features/cases/PublicVerdictView.jsx';
 import { AuditTimeline } from '../features/audit/AuditTimeline.jsx';
 import { AuthProvider } from '../features/auth/AuthContext.jsx';
 import { TeamProvider } from '../features/teams/TeamContext.jsx';
-import { createDefaultFetchMock } from './setup.js';
 
 describe('Phases 3-5: Tasks, Courtroom Cases, Voting, Verdicts, and Public Dossier UI', () => {
   const mockUser = {
