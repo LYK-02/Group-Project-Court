@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { App } from '../App.jsx';
 import { createDefaultFetchMock } from './setup.js';
 
@@ -30,25 +30,91 @@ describe('Client Foundation & Neo-Brutalist Shell', () => {
     });
   });
 
-  it('validates interactive form field input and displays error state', async () => {
+  it('opens authentication modal when clicking Witness Login button', async () => {
     render(<App />);
 
     await waitFor(() => {
       expect(screen.getByText(/API: healthy/i)).toBeInTheDocument();
     });
 
-    const validateButton = screen.getByRole('button', { name: /validate input/i });
-    fireEvent.click(validateButton);
+    const loginButton = screen.getByRole('button', { name: /witness login/i });
+    fireEvent.click(loginButton);
 
-    expect(
-      screen.getByText(/this field cannot be empty in court testimony\./i)
-    ).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /accredited sign-in/i })).toBeInTheDocument();
+  });
 
-    const input = screen.getByLabelText(/defendant display name/i);
-    fireEvent.change(input, { target: { value: 'Jordan Lee' } });
+  it('tests all navigation buttons and switches views smoothly', async () => {
+    render(<App />);
 
-    expect(
-      screen.queryByText(/this field cannot be empty in court testimony\./i)
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/API: healthy/i)).toBeInTheDocument();
+    });
+
+    // 1. Click Tasks nav button
+    const tasksNav = screen.getByRole('button', { name: /tasks/i });
+    fireEvent.click(tasksNav);
+    expect(screen.getByText(/access to team task boards/i)).toBeInTheDocument();
+
+    // 2. Click Teams & Roster nav button
+    const teamsNav = screen.getByRole('button', { name: /teams & roster/i });
+    fireEvent.click(teamsNav);
+    expect(screen.getByText(/access to project rosters/i)).toBeInTheDocument();
+
+    // 3. Click Audit Ledger nav button
+    const auditNav = screen.getByRole('button', { name: /audit ledger/i });
+    fireEvent.click(auditNav);
+    expect(screen.getByText(/access to the immutable team audit ledger/i)).toBeInTheDocument();
+
+    // 4. Click Courtroom nav button to return home
+    const courtroomNav = screen.getByRole('button', { name: /courtroom/i });
+    fireEvent.click(courtroomNav);
+    expect(screen.getByRole('heading', { name: /someone didn't do the work\./i })).toBeInTheDocument();
+  });
+
+  it('opens auth modal via Establish Team and switches between Login and Register tabs', async () => {
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/API: healthy/i)).toBeInTheDocument();
+    });
+
+    const establishButton = screen.getByRole('button', { name: /establish team/i });
+    fireEvent.click(establishButton);
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByRole('heading', { name: /witness registration/i })).toBeInTheDocument();
+
+    // Switch to Log In tab inside modal
+    const loginTab = within(dialog).getByRole('button', { name: /^log in$/i });
+    fireEvent.click(loginTab);
+    expect(within(dialog).getByRole('heading', { name: /accredited sign-in/i })).toBeInTheDocument();
+
+    // Close dialog with close button
+    const closeBtn = within(dialog).getByRole('button', { name: /close dialog/i });
+    fireEvent.click(closeBtn);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('verifies that unwanted demo buttons and scaffolding text are completely removed', async () => {
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/API: healthy/i)).toBeInTheDocument();
+    });
+
+    // Verify obsolete test buttons do not exist
+    expect(screen.queryByRole('button', { name: /^hot red$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^vivid yellow$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^soft violet$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^neutral white$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^validate input$/i })).not.toBeInTheDocument();
+
+    // Verify obsolete dummy copy does not exist
+    expect(screen.queryByText(/git log indicates jordan pushed 0 commits/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/design system specification/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/accessible form controls/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/verified tokens: canvas/i)).not.toBeInTheDocument();
   });
 });
