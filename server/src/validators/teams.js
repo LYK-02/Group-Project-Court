@@ -26,3 +26,13 @@ export const teamMemberParamSchema = z.object({
   teamId: z.string().uuid('Invalid Team ID format.'),
   userId: z.string().uuid('Invalid User ID format.'),
 });
+
+export const inviteTokenParamSchema = z.object({
+  token: z.string().trim().min(1, 'Invite token is required.'),
+});
+
+export const inviteIdParamSchema = z.object({
+  teamId: z.string().uuid('Invalid Team ID format.'),
+  inviteId: z.string().uuid('Invalid Invite ID format.'),
+});
+
