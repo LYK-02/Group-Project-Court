@@ -117,4 +117,55 @@ describe('Client Foundation & Neo-Brutalist Shell', () => {
     expect(screen.queryByText(/accessible form controls/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/verified tokens: canvas/i)).not.toBeInTheDocument();
   });
+
+  it('opens and closes keyboard shortcuts modal via trigger button and hotkey ?', async () => {
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/API: healthy/i)).toBeInTheDocument();
+    });
+
+    // 1. Open via navbar button
+    const shortcutsBtn = screen.getByRole('button', { name: /view keyboard shortcuts/i });
+    fireEvent.click(shortcutsBtn);
+
+    expect(screen.getByRole('heading', { name: /courtroom keyboard shortcuts/i })).toBeInTheDocument();
+
+    // Close via Dismiss button
+    const gotItBtn = screen.getByRole('button', { name: /got it \(dismiss\)/i });
+    fireEvent.click(gotItBtn);
+    expect(screen.queryByRole('heading', { name: /courtroom keyboard shortcuts/i })).not.toBeInTheDocument();
+
+    // 2. Open via '?' key
+    fireEvent.keyDown(window, { key: '?' });
+    expect(screen.getByRole('heading', { name: /courtroom keyboard shortcuts/i })).toBeInTheDocument();
+
+    // Close via Escape key
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('heading', { name: /courtroom keyboard shortcuts/i })).not.toBeInTheDocument();
+  });
+
+  it('navigates views using number key accelerators 1, 2, 3, 4', async () => {
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/API: healthy/i)).toBeInTheDocument();
+    });
+
+    // Press '2' for tasks
+    fireEvent.keyDown(window, { key: '2' });
+    expect(screen.getByText(/access to team task boards/i)).toBeInTheDocument();
+
+    // Press '3' for teams
+    fireEvent.keyDown(window, { key: '3' });
+    expect(screen.getByText(/access to project rosters/i)).toBeInTheDocument();
+
+    // Press '4' for audit
+    fireEvent.keyDown(window, { key: '4' });
+    expect(screen.getByText(/access to the immutable team audit ledger/i)).toBeInTheDocument();
+
+    // Press '1' for courtroom
+    fireEvent.keyDown(window, { key: '1' });
+    expect(screen.getByRole('heading', { name: /someone didn't do the work\./i })).toBeInTheDocument();
+  });
 });
