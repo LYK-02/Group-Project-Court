@@ -232,23 +232,28 @@ export function TeamDashboard() {
         {/* Right Columns: Active Team Roster & Controls */}
         <div className="lg:col-span-2 space-y-6">
           {activeTeam ? (
-            <Card
-              title={activeTeam.name}
-              badge={
-                <Badge variant={isOwner ? 'critical' : 'active'}>
+            <Card shadow="normal" className="p-6">
+              {/* Team Title and Owner Badge Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-3 border-ink pb-4 mb-6">
+                <div>
+                  <h2 className="text-2xl font-black uppercase tracking-wider text-ink">
+                    {activeTeam.name}
+                  </h2>
+                  <p className="text-xs font-mono text-neutral-600">
+                    Jurisdiction ID: <span className="font-bold text-ink">{activeTeam.id}</span>
+                  </p>
+                </div>
+                <Badge variant={isOwner ? 'critical' : 'active'} size="md">
                   {isOwner ? 'You are Owner' : 'Team Member'}
                 </Badge>
-              }
-            >
+              </div>
+
               {/* Team Metadata Banner */}
               <div className="bg-[#FFFDF5] border-2 border-ink p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <p className="text-xs font-mono text-neutral-600 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
                     Founded: {new Date(activeTeam.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs font-mono text-neutral-600">
-                    Jurisdiction ID: <span className="font-bold text-ink">{activeTeam.id}</span>
                   </p>
                 </div>
 
