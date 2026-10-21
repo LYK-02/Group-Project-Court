@@ -3,7 +3,7 @@
 > **Justice for the Carrying Member.**  
 > A satirical, full-stack student-team collaboration app for managing tasks, opening peer-reviewed contribution disputes, submitting verified evidence notes, and calculating community verdicts.
 
-[![CI Status](https://img.shields.io/badge/Status-Day%201%20Foundation%20Complete-green.svg)](#delivery-phases)
+[![CI Status](https://img.shields.io/badge/Status-All%20Phases%20Verified%20%26%20Complete-green.svg)](#-seven-day-delivery-roadmap)
 [![Design Style](https://img.shields.io/badge/Design-Neo--brutalism-FF6B6B.svg)](docs/DESIGN.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-FFD93D.svg)](#disclaimer)
 
@@ -148,12 +148,48 @@ npm run build
 ## 📅 Seven-Day Delivery Roadmap
 
 - [x] **Day 1 — Foundation & Design:** Scaffolding, PostgreSQL schema migrations, health endpoint, neo-brutalist design tokens, tactile components, and automated test runners.
-- [ ] **Day 2 — Authentication & Teams:** Registration, secure session management, team creation, and invite tokens.
-- [ ] **Day 3 — Tasks & Audit Trail:** Task CRUD, assignee verification, and audit event logs.
-- [ ] **Day 4 — Cases, Evidence & Verdicts:** Case lifecycle, evidence submission, one-vote-per-user constraint, and transaction-safe verdict calculation.
-- [ ] **Day 5 — Courtroom UI Polish & Sharing:** Responsive jury voting screen, verdict reveals, sanitized public summaries.
-- [ ] **Day 6 — Hardening & End-to-End Testing:** Access control verification, injection checks, and deployment.
-- [ ] **Day 7 — Presentation & Demo Readiness:** Seeded demo walkthrough, frozen code, and mentor guide.
+- [x] **Day 2 — Authentication & Teams:** Registration, secure session management, team creation, and invite tokens.
+- [x] **Day 3 — Tasks & Audit Trail:** Task CRUD, assignee verification, and audit event logs.
+- [x] **Day 4 — Cases, Evidence & Verdicts:** Case lifecycle, evidence submission, one-vote-per-user constraint, and transaction-safe verdict calculation.
+- [x] **Day 5 — Courtroom UI Polish & Sharing:** Responsive jury voting screen, verdict reveals, sanitized public summaries.
+- [x] **Day 6 — Hardening & End-to-End Testing:** Access control verification, injection checks, and deployment.
+- [x] **Day 7 — Presentation & Demo Readiness:** Seeded demo walkthrough, frozen code, and mentor guide.
+
+---
+
+## 🎭 Fictional Courtroom Demo Showcase & 3-Minute Walkthrough
+
+The repository includes a ready-to-run fictional student team demonstration seeded directly into PostgreSQL / Neon:
+
+### Demo Credentials
+All seeded users share the development password: `Password123!`
+
+| Role / Persona | Name | Email |
+| :--- | :--- | :--- |
+| **Team Owner (The Carry)** | Alex Rivera | `alex@demo.court` |
+| **Accused Teammate (The Ghost)** | Jordan Lee | `jordan@demo.court` |
+| **Witness / Juror (The Scribe)** | Taylor Kim | `taylor@demo.court` |
+
+### 3-Minute Evaluation Walkthrough
+1. **Accredited Witness Sign-In:**
+   - Log in with `alex@demo.court` / `Password123!`.
+   - The active team **"CS 401: Distributed Consensus Calamity"** automatically loads.
+2. **Task Deliverables & Kanban (Phase 3):**
+   - Click **Tasks** in the top navigation.
+   - Inspect the 3 columns: *Done* (Raft consensus by Alex), *In Progress* (Architecture deck by Taylor), and *To-Do* (Integration tests unstarted by Jordan).
+3. **Dispute Docket & Juror Deliberation (Phase 4 & 5):**
+   - Click **Courtroom** in the top navigation.
+   - Click **Enter Courtroom** on case *"The Mystery of the Missing Load-Balancer Tests"*.
+   - Review admitted evidence notes citing 0 commits from Jordan over 3 weeks.
+   - Cast a juror vote (**Unfair / Impose Duty** or **Needs Review**).
+4. **Bench Ruling & Theatrical Verdict:**
+   - Click **Deliver Verdict & Close Trial** (Owner privilege).
+   - The court tallies consensus and stamps an official **GUILTY** or **ACQUITTED** verdict with satirical penalties (mandatory merge conflict duty and sprint coffee delivery).
+5. **Public Summons & Sharing (Phase 5):**
+   - Click **Generate Share Link** -> Copy the URL or click **View Public Page**.
+   - Observe the sanitized public dossier: zero authentication required, privacy protected (no emails or internal tokens exposed).
+6. **Forensic Audit Ledger (Phase 3):**
+   - Click **Audit Ledger** in navigation to review immutable cryptographic activity logs.
 
 ---
 
