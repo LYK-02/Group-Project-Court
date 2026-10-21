@@ -206,13 +206,13 @@ export const teamService = {
         [invite.team_id, userId, userId, JSON.stringify({ inviteId: invite.id })]
       );
 
-      await client.query('COMMIT');
-
-      // Return team summary
-      const { rows: teamRows } = await db.query(
+      // 4. Return team summary
+      const { rows: teamRows } = await client.query(
         `SELECT id, name FROM teams WHERE id = $1 LIMIT 1;`,
         [invite.team_id]
       );
+
+      await client.query('COMMIT');
 
       return {
         team: teamRows[0],
