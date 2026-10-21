@@ -1,24 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { App } from '../App.jsx';
+import { createDefaultFetchMock } from './setup.js';
 
 describe('Client Foundation & Neo-Brutalist Shell', () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    global.fetch = createDefaultFetchMock();
   });
 
   it('renders courtroom hero headline and core branding', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      headers: new Headers({ 'content-type': 'application/json' }),
-      json: async () => ({
-        status: 'healthy',
-        version: '1.0.0',
-        uptimeSeconds: 42,
-        database: { status: 'healthy', latencyMs: 2 },
-      }),
-    });
-
     render(<App />);
 
     expect(
@@ -33,17 +23,6 @@ describe('Client Foundation & Neo-Brutalist Shell', () => {
   });
 
   it('displays API health status after probe resolves', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      headers: new Headers({ 'content-type': 'application/json' }),
-      json: async () => ({
-        status: 'healthy',
-        version: '1.0.0',
-        uptimeSeconds: 10,
-        database: { status: 'healthy', latencyMs: 4 },
-      }),
-    });
-
     render(<App />);
 
     await waitFor(() => {
@@ -52,12 +31,6 @@ describe('Client Foundation & Neo-Brutalist Shell', () => {
   });
 
   it('validates interactive form field input and displays error state', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      headers: new Headers({ 'content-type': 'application/json' }),
-      json: async () => ({ status: 'healthy' }),
-    });
-
     render(<App />);
 
     await waitFor(() => {
