@@ -46,3 +46,6 @@ scratch/
 tmp/
 .temp/
 .neon
+
+# Precompiled CLI binaries
+.agents/skills/impeccable/scripts/bin/
