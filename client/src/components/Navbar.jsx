@@ -46,6 +46,7 @@ export function Navbar({
           </div>
 
           {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-6" aria-label="Main Navigation">
             <button
               type="button"
               onClick={() => handleNavClick('courtroom')}
