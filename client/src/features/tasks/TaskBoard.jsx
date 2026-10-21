@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   CheckSquare,
-  Clock,
   User,
   Plus,
   Trash2,
