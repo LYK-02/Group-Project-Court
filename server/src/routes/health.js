@@ -20,6 +20,8 @@ router.get('/health', async (req, res) => {
     database: {
       status: dbHealth.status,
       latencyMs: dbHealth.latencyMs,
+      provider: dbHealth.isNeon ? 'Neon Serverless Postgres' : 'PostgreSQL',
+      branch: dbHealth.neonBranch || undefined,
     },
   };
 

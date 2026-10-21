@@ -1,9 +1,9 @@
 # Project Memory — Group Project Court
 
-## 1. Project Overview & Directives
+## 1. Project Overview & Operating Directives
 
 - **Repository**: `LYK-02/Group-Project-Court`
-- **Application**: "Group Project Court" — A satirical yet functional student accountability courtroom web application where teams track tasks, raise cases for missed deadlines or low contribution, present evidence, vote, and issue binding verdicts.
+- **Application**: "Group Project Court" — A satirical yet functional student accountability courtroom web application where teams track tasks, raise dispute cases for missed deadlines or non-contribution, present evidence, vote, and issue binding verdicts.
 - **Core Operating Mandates**:
   1. **Zero Mistakes**: Every phase must be rigorously validated with passing linters, unit/integration tests, and builds before completion.
   2. **Incremental Delivery**: Commit and push files **one by one** with descriptive, conventional commit messages. Never commit everything in a single bulk commit.
@@ -11,21 +11,31 @@
 
 ---
 
-## 2. User Preferences & Environment Settings
+## 2. User IDE Preferences & Settings
 
-- **Antigravity IDE User Settings**: Imported from user's VS Code setup into `~/.config/Antigravity IDE/User/settings.json` (53 preferences configured):
-  - `editor.fontSize`: 18
-  - `files.autoSave`: "afterDelay"
-  - `editor.mouseWheelZoom`: true
-  - `workbench.editor.enablePreview`: false
-  - `workbench.activityBar.location`: "top"
-  - `editor.minimap.enabled`: false
-  - `editor.stickyScroll.enabled`: false
-  - `glassit.alpha`: 220
-  - `editor.cursorSmoothCaretAnimation`: "on"
-  - `editor.formatOnSave`: true
-  - `git.confirmSync`: false
-  - `git.suggestSmartCommit`: false
+Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.config/Antigravity IDE/User/settings.json` (53 preferences configured):
+
+- **Theme & Appearance:**
+  - `workbench.colorTheme`: `"Cursor Dark Core"`
+  - `workbench.iconTheme`: `"mizu"`
+  - `window.menuBarVisibility`: `"compact"`
+  - `workbench.activityBar.location`: `"top"`
+  - `glassit.alpha`: `220`
+- **Editor Settings:**
+  - `editor.fontSize`: `18`
+  - `editor.wordWrap`: `"on"`
+  - `editor.mouseWheelZoom`: `true`
+  - `editor.minimap.enabled`: `false`
+  - `editor.stickyScroll.enabled`: `false`
+  - `editor.cursorBlinking`: `"phase"`
+  - `editor.cursorSmoothCaretAnimation`: `"on"`
+  - `files.autoSave`: `"afterDelay"`
+  - `editor.formatOnSave`: `true`
+- **Git & Terminal:**
+  - `git.autofetch`: `true`
+  - `git.confirmSync`: `false`
+  - `git.suggestSmartCommit`: `false`
+  - `terminal.integrated.mouseWheelScrollSensitivity`: `3`
 
 ---
 
@@ -35,11 +45,11 @@
   - Node.js (ES Modules, Node 20+)
   - Express.js (v4)
   - PostgreSQL driver: `pg` (v8)
-  - Session auth: `express-session` with secure HTTP-only cookies
-  - Password hashing: `bcryptjs`
-  - Validation: `zod` (v3)
+  - Session auth: `express-session` with secure HTTP-only cookies (`gpc.sid`)
+  - Password hashing: `bcryptjs` (salt rounds: 12)
+  - Request validation: `zod` (v3)
   - Security & Logging: `helmet`, `cors`, `pino`, `pino-pretty`, `express-rate-limit`
-  - Testing: Node test runner (`node --test`), Supertest
+  - Testing: Node test runner (`node --test`), Supertest, Vitest
 - **Frontend**:
   - React 19 + Vite 6
   - Tailwind CSS v4 + Vanilla CSS custom properties
@@ -49,22 +59,22 @@
   - Neon Serverless Postgres
   - Org ID: `org-morning-rain-49427514`
   - Project ID: `young-moon-49945213`
-  - Branch: `production`
+  - Default Branch: `production`
 - **Design Language**:
   - **Neo-brutalism** (per `docs/DESIGN.md`):
     - Warm parchment canvas (`#FFFDF5`)
     - Hard black borders (`3px solid #000000`)
-    - Crisp unblurred drop shadows (`4px 4px 0px #000000`, `6px 6px 0px #000000`)
-    - Accent colors: Electric Yellow (`#FFE500`), Crimson Alert (`#FF3B30`), Mint Defense (`#34C759`), Legal Blue (`#0055FF`)
+    - Crisp unblurred drop shadows (`4px 4px 0px #000000`, `6px 6px 0px #000000`, `8px 8px 0px #000000`)
+    - Accent colors: Electric Yellow (`#FFE500`), Crimson Alert (`#FF3B30`), Mint Defense (`#34C759`), Legal Blue (`#0055FF`), Soft Violet (`#C4B5FD`)
     - Typography: Space Grotesk (display), Inter (body), Space Mono (verdicts/tokens)
 
 ---
 
 ## 4. Architectural Rules & Best Practices
 
-1. **Neon Connection Strategy**:
-   - **Migrations & Seeds** (`database/migrate.js`, `database/seed.js`): MUST use direct, unpooled connection (`DATABASE_URL_UNPOOLED` without `-pooler`). PgBouncer in transaction pooling mode fails on migration locks and session commands.
-   - **Application Traffic** (`server/src/config/db.js`): Uses pooled connection (`DATABASE_URL`) with `ssl: { rejectUnauthorized: false }`.
+1. **Neon Connection Strategy (Best Practice from Neon Skill)**:
+   - **`DATABASE_URL_UNPOOLED` (Direct Connection):** Used exclusively for DDL, migrations, and seeds (`database/migrate.js`, `database/seed.js`). Direct connection bypasses PgBouncer transaction-mode session limitations and lock handling.
+   - **`DATABASE_URL` (Pooled Connection):** Used for normal web application runtime query traffic via PgBouncer. Configured in `server/src/config/db.js` with `ssl: { rejectUnauthorized: false }`.
 2. **Security & Authentication**:
    - Passwords hashed with `bcryptjs` (salt rounds: 12).
    - Session cookies: `httpOnly: true`, `sameSite: 'lax'`, `secure: production`.

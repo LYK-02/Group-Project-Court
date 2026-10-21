@@ -14,12 +14,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function runSeeds(customPool = null) {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
   if (!customPool && !connectionString) {
-    throw new Error('DATABASE_URL environment variable is required to run seeds.');
+    throw new Error('DATABASE_URL or DATABASE_URL_UNPOOLED environment variable is required to run seeds.');
   }
 
-  const pool = customPool || new pg.Pool({ connectionString });
+  const ssl = connectionString.includes('neon.tech') ? { rejectUnauthorized: false } : undefined;
+  const pool = customPool || new pg.Pool({ connectionString, ssl });
   const client = await pool.connect();
 
   try {
