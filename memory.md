@@ -1,8 +1,19 @@
-# Project Memory & Developer Preferences
+# Project Memory — Group Project Court
 
-## 1. User IDE Preferences & Settings
+## 1. Project Overview & Operating Directives
 
-Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.config/Antigravity IDE/User/settings.json`:
+- **Repository**: `LYK-02/Group-Project-Court`
+- **Application**: "Group Project Court" — A satirical yet functional student accountability courtroom web application where teams track tasks, raise dispute cases for missed deadlines or non-contribution, present evidence, vote, and issue binding verdicts.
+- **Core Operating Mandates**:
+  1. **Zero Mistakes**: Every phase must be rigorously validated with passing linters, unit/integration tests, and builds before completion.
+  2. **Incremental Delivery**: Commit and push files **one by one** with descriptive, conventional commit messages. Never commit everything in a single bulk commit.
+  3. **Phase-by-Phase PRs**: Each phase is developed on its own dedicated feature branch with an active Pull Request tracking progress.
+
+---
+
+## 2. User IDE Preferences & Settings
+
+Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.config/Antigravity IDE/User/settings.json` (53 preferences configured):
 
 - **Theme & Appearance:**
   - `workbench.colorTheme`: `"Cursor Dark Core"`
@@ -19,7 +30,7 @@ Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.con
   - `editor.cursorBlinking`: `"phase"`
   - `editor.cursorSmoothCaretAnimation`: `"on"`
   - `files.autoSave`: `"afterDelay"`
-  - `editor.defaultFormatter`: `"esbenp.prettier-vscode"`
+  - `editor.formatOnSave`: `true`
 - **Git & Terminal:**
   - `git.autofetch`: `true`
   - `git.confirmSync`: `false`
@@ -28,48 +39,75 @@ Imported from `/home/laik/.config/Code/User/settings.json` into `/home/laik/.con
 
 ---
 
-## 2. Neon Serverless PostgreSQL Configuration
+## 3. Technology Stack & Design System
 
-- **Organization ID:** `org-morning-rain-49427514`
-- **Project ID:** `young-moon-49945213`
-- **Default Branch:** `production`
-- **Connection Strategy (Best Practice from Neon Skill):**
-  - **`DATABASE_URL_UNPOOLED` (Direct Connection):** Used exclusively for DDL, migrations, and seeds (`database/migrate.js`, `database/seed.js`). Direct connection bypasses PgBouncer transaction-mode session limitations.
-  - **`DATABASE_URL` (Pooled Connection):** Used for normal web application runtime query traffic via PgBouncer. Configured in `server/src/config/db.js` with `ssl: { rejectUnauthorized: false }`.
-- **Verified Neon Status:**
-  - PostgreSQL Version: `PostgreSQL 18.6`
-  - End-to-end verified via `/api/v1/health` returning `provider: "Neon Serverless Postgres"`.
+- **Backend**:
+  - Node.js (ES Modules, Node 20+)
+  - Express.js (v4)
+  - PostgreSQL driver: `pg` (v8)
+  - Session auth: `express-session` with secure HTTP-only cookies (`gpc.sid`)
+  - Password hashing: `bcryptjs` (salt rounds: 12)
+  - Request validation: `zod` (v3)
+  - Security & Logging: `helmet`, `cors`, `pino`, `pino-pretty`, `express-rate-limit`
+  - Testing: Node test runner (`node --test`), Supertest, Vitest
+- **Frontend**:
+  - React 19 + Vite 6
+  - Tailwind CSS v4 + Vanilla CSS custom properties
+  - Icons: `lucide-react`
+  - Testing: Vitest + React Testing Library + `@testing-library/jest-dom` + `jsdom`
+- **Database & Cloud**:
+  - Neon Serverless Postgres
+  - Org ID: `org-morning-rain-49427514`
+  - Project ID: `young-moon-49945213`
+  - Default Branch: `production`
+- **Design Language**:
+  - **Neo-brutalism** (per `docs/DESIGN.md`):
+    - Warm parchment canvas (`#FFFDF5`)
+    - Hard black borders (`3px solid #000000`)
+    - Crisp unblurred drop shadows (`4px 4px 0px #000000`, `6px 6px 0px #000000`, `8px 8px 0px #000000`)
+    - Accent colors: Electric Yellow (`#FFE500`), Crimson Alert (`#FF3B30`), Mint Defense (`#34C759`), Legal Blue (`#0055FF`), Soft Violet (`#C4B5FD`)
+    - Typography: Space Grotesk (display), Inter (body), Space Mono (verdicts/tokens)
 
 ---
 
-## 3. Project Architecture & Stack
+## 4. Architectural Rules & Best Practices
 
-- **Frontend:** React 18 + Vite (SPA)
-  - Styling: Tailwind CSS Neo-brutalist design tokens (`#FFFDF5` canvas, `#FF6B6B` hot red, `#FFD93D` vivid yellow, `#C4B5FD` soft violet, hard shadows `4px`, `6px`, `8px`, `12px`, 3px borders)
-  - Components: `Button`, `Card`, `Badge`, `FormField`, `VerdictStamp`, `Navbar`
-  - Typography: Space Grotesk
-- **Backend:** Node.js + Express REST API (`/api/v1`)
-  - Middleware: Request ID tracking (`X-Request-Id`), structured duration logger, Helmet security headers, rate limiting, and centralized error handler
-- **Database:** PostgreSQL on Neon
-  - Tables: `users`, `teams`, `team_members`, `team_invites`, `tasks`, `cases`, `evidence`, `votes`, `audit_events`
-  - Constraints: Unique `(case_id, user_id)` vote constraint, foreign keys with cascade rules, check constraints on roles and status
-- **Quality Gates:**
-  - `npm run lint`: ESLint flat config with React, hooks, and Node support (0 errors, 0 warnings)
-  - `npm run test:all`: Vitest test suites across server and client (8 passing)
-  - `npm run build`: Production bundle built cleanly
+1. **Neon Connection Strategy (Best Practice from Neon Skill)**:
+   - **`DATABASE_URL_UNPOOLED` (Direct Connection):** Used exclusively for DDL, migrations, and seeds (`database/migrate.js`, `database/seed.js`). Direct connection bypasses PgBouncer transaction-mode session limitations and lock handling.
+   - **`DATABASE_URL` (Pooled Connection):** Used for normal web application runtime query traffic via PgBouncer. Configured in `server/src/config/db.js` with `ssl: { rejectUnauthorized: false }`.
+2. **Security & Authentication**:
+   - Passwords hashed with `bcryptjs` (salt rounds: 12).
+   - Session cookies: `httpOnly: true`, `sameSite: 'lax'`, `secure: production`.
+   - Never expose raw invite tokens in database or responses; store SHA-256 hashes (`token_hash`).
+   - Authentication errors must return uniform messages (`"Invalid email or password."`) to eliminate user enumeration vulnerabilities.
+   - Transactional integrity: Any multi-row mutation (e.g. creating team + inserting creator as owner) must use explicit `BEGIN ... COMMIT/ROLLBACK` blocks.
 
 ---
 
-## 4. Git & Delivery Rules
+## 5. Phase Execution Tracker
 
-- **Branch Naming:** `feat/phase-<N>-<topic>` (e.g. `feat/phase-1-foundation`)
-- **Granular Commits:** Upload and commit files individually with semantic commit messages (`feat(...)`, `test(...)`, `fix(...)`, `docs(...)`) rather than monolithic bulk commits.
-- **Pull Requests:** Open a PR on GitHub per phase with a structured description checklist.
-- **Phase Status:**
-  - [x] Phase 1: Foundation & Design (Merged / PR #3)
-  - [ ] Phase 2: Authentication & Teams (Registration, sessions, invite tokens, dashboard)
-  - [ ] Phase 3: Tasks & Audit History
-  - [ ] Phase 4: Cases, Evidence, Voting & Verdicts
-  - [ ] Phase 5: Courtroom UI Polish & Sharing
-  - [ ] Phase 6: Testing, Hardening & Deployment
-  - [ ] Phase 7: Demo Readiness
+| Phase | Description | Status | Git Branch / PR | Verification |
+| :--- | :--- | :--- | :--- | :--- |
+| **Phase 1** | Foundation and Design: Monorepo, database schema, Neon cloud connection, health checks, design tokens, UI shell. | **Done (Merged)** | `main` (PR #1, #2, #3 merged) | Migrations passed on Neon, live health check verified, 100% tests passing. |
+| **Phase 2** | Authentication and Teams: User register/login/logout, team management, invite codes, role authorization, team dashboard. | **Done** | `feat/phase-2-auth-and-teams` (PR #6) | 29 server integration tests passing, 9 client tests passing, 100% lint & Vite build verified. |
+| **Phase 3** | Tasks & Audit History: Task CRUD, status updates, team assignment verification, audit events log. | Pending | TBD | Pending |
+| **Phase 4** | Cases, Evidence, Voting & Verdict: Dispute cases, evidence uploads, single-vote constraint, verdict engine. | Pending | TBD | Pending |
+| **Phase 5** | UI Polish & Public Sharing: Courtroom UI, responsive layouts, empty/loading states, sanitized public shares. | Pending | TBD | Pending |
+| **Phase 6** | Testing, Hardening & Deployment: Security audits, stress testing, end-to-end flows, production verification. | Pending | TBD | Pending |
+| **Phase 7** | Demo Readiness: Seed fictional courtroom showcase, demo scripts, architecture walkthrough, documentation freeze. | Pending | TBD | Pending |
+
+---
+
+## 6. Installed Skills & Tooling
+
+- Installed Neon Agent Skills (in `.agents/skills/`):
+  - `neon`: Core Neon Postgres platform guide
+  - `neon-auth`: Neon serverless auth
+  - `neon-branch-preview`: Ephemeral branch preview workflow
+  - `neon-cli`: Neon CLI interaction
+  - `neon-data-api`: Neon serverless HTTP data API
+  - `neon-database-mcp`: MCP database connectivity
+  - `neon-functions`: Serverless functions
+  - `neon-pg-indexes`: Index optimization
+  - `neon-pg-tuning`: Query performance tuning
+- Pinned in `skills-lock.json`.
